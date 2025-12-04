@@ -142,5 +142,25 @@
         </div>
     </section>
 
+    <!-- 🔥 FIREBASE INTEGRATION -->
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+      import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-analytics.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyBui0laG_D2zwqlBLoAw2zSUgrqS-4lA_M",
+        authDomain: "cmms-y.firebaseapp.com",
+        projectId: "cmms-y",
+        storageBucket: "cmms-y.firebasestorage.app",
+        messagingSenderId: "461705384988",
+        appId: "1:461705384988:web:92d66768fff4548186bbd9",
+        measurementId: "G-3MGBW2YBF5"
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const analytics = getAnalytics(app);
+    </script>
+
 </body>
 </html>
+
