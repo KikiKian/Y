@@ -6,12 +6,39 @@
     <title>Y - School Social Media</title>
 
     <style>
-        /* GLOBAL */
+        /* ======================================================
+           THEME VARIABLES
+        ====================================================== */
+        :root {
+            --bg: #FDFDFC;
+            --text: #000000;
+            --header-bg: #1E29EB;
+            --header-text: #FDFDFC;
+            --accent: #E3AE0C;
+            --card-bg: #FDFDFC;
+            --card-border: #1E29EB;
+        }
+
+        /* Dark theme overrides */
+        .dark-theme {
+            --bg: #121212;
+            --text: #FFFFFF;
+            --header-bg: #000000;
+            --header-text: #FFFFFF;
+            --accent: #444444;
+            --card-bg: #1E1E1E;
+            --card-border: #444444;
+        }
+
+        /* ======================================================
+           GLOBAL
+        ====================================================== */
         body {
             margin: 0;
             font-family: Arial, Helvetica, sans-serif;
-            background: #FDFDFC;
-            color: #000000;
+            background: var(--bg);
+            color: var(--text);
+            transition: 0.3s;
         }
 
         /* HEADER */
@@ -20,8 +47,8 @@
             justify-content: space-between;
             align-items: center;
             padding: 15px 40px;
-            background: #1E29EB;
-            color: #FDFDFC;
+            background: var(--header-bg);
+            color: var(--header-text);
         }
 
         header .logo {
@@ -31,17 +58,17 @@
 
         nav a {
             margin: 0 15px;
-            color: #FDFDFC;
+            color: var(--header-text);
             text-decoration: none;
             font-weight: 500;
         }
 
         nav a:hover {
-            color: #E3AE0C;
+            color: var(--accent);
         }
 
         .login-btn {
-            background: #E3AE0C;
+            background: var(--accent);
             border: none;
             padding: 10px 18px;
             font-size: 14px;
@@ -49,21 +76,33 @@
             border-radius: 4px;
         }
 
+        /* THEME SWITCH BUTTON */
+        .theme-btn {
+            background: var(--accent);
+            border: none;
+            padding: 10px 18px;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-left: 10px;
+        }
+
         /* HERO */
         .hero {
             text-align: center;
             padding: 80px 20px;
-            background: #E3AE0C;
-            color: #000000;
+            background: var(--accent);
+            color: var(--text);
+            transition: 0.3s;
         }
 
         .hero h1 span {
-            color: #1E29EB;
+            color: var(--header-bg);
         }
 
         .cta {
-            background: #1E29EB;
-            color: #FDFDFC;
+            background: var(--header-bg);
+            color: var(--header-text);
             border: none;
             padding: 12px 24px;
             font-size: 16px;
@@ -83,20 +122,21 @@
         }
 
         .feed h2 {
-            border-left: 5px solid #1E29EB;
+            border-left: 5px solid var(--header-bg);
             padding-left: 10px;
         }
 
         .post {
-            background: #FDFDFC;
-            border: 2px solid #1E29EB;
+            background: var(--card-bg);
+            border: 2px solid var(--card-border);
             padding: 20px;
             margin: 20px 0;
             border-radius: 6px;
+            transition: 0.3s;
         }
 
         .post h3 {
-            color: #1E29EB;
+            color: var(--header-bg);
         }
     </style>
 </head>
@@ -106,13 +146,18 @@
     <!-- HEADER / NAVBAR -->
     <header>
         <div class="logo">Y</div>
+
         <nav>
             <a href="#">Home</a>
             <a href="#">Posts</a>
             <a href="#">Clubs</a>
             <a href="#">Profile</a>
         </nav>
-        <button class="login-btn">Login</button>
+
+        <div>
+            <button class="login-btn">Login</button>
+            <button class="theme-btn" id="themeToggle">Dark Mode</button>
+        </div>
     </header>
 
     <!-- HERO SECTION -->
@@ -142,7 +187,7 @@
         </div>
     </section>
 
-    <!-- 🔥 FIREBASE INTEGRATION -->
+     <!-- 🔥 FIREBASE INTEGRATION -->
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
       import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-analytics.js";
@@ -161,8 +206,27 @@
       const analytics = getAnalytics(app);
     </script>
 
+    <!-- THEME SWITCH SCRIPT -->
+    <script>
+        const themeBtn = document.getElementById("themeToggle");
+
+        // Load saved theme
+        if (localStorage.getItem("theme") === "dark") {
+            document.body.classList.add("dark-theme");
+            themeBtn.textContent = "Light Mode";
+        }
+
+        themeBtn.onclick = () => {
+            document.body.classList.toggle("dark-theme");
+
+            const isDark = document.body.classList.contains("dark-theme");
+
+            themeBtn.textContent = isDark ? "Light Mode" : "Dark Mode";
+
+            // Save choice
+            localStorage.setItem("theme", isDark ? "dark" : "light");
+        };
+    </script>
+
 </body>
 </html>
-
-
-
