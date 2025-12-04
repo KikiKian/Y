@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Y - School Social Media</title>
+
+    <style>
+        /* GLOBAL */
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #FDFDFC;
+            color: #000000;
+        }
+
+        /* HEADER */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 40px;
+            background: #1E29EB;
+            color: #FDFDFC;
+        }
+
+        header .logo {
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        nav a {
+            margin: 0 15px;
+            color: #FDFDFC;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        nav a:hover {
+            color: #E3AE0C;
+        }
+
+        .login-btn {
+            background: #E3AE0C;
+            border: none;
+            padding: 10px 18px;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        /* HERO */
+        .hero {
+            text-align: center;
+            padding: 80px 20px;
+            background: #E3AE0C;
+            color: #000000;
+        }
+
+        .hero h1 span {
+            color: #1E29EB;
+        }
+
+        .cta {
+            background: #1E29EB;
+            color: #FDFDFC;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            margin-top: 20px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .cta:hover {
+            background: #000000;
+        }
+
+        /* FEED SECTION */
+        .feed {
+            width: 70%;
+            margin: 40px auto;
+        }
+
+        .feed h2 {
+            border-left: 5px solid #1E29EB;
+            padding-left: 10px;
+        }
+
+        .post {
+            background: #FDFDFC;
+            border: 2px solid #1E29EB;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 6px;
+        }
+
+        .post h3 {
+            color: #1E29EB;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- HEADER / NAVBAR -->
+    <header>
+        <div class="logo">Y</div>
+        <nav>
+            <a href="#">Home</a>
+            <a href="#">Posts</a>
+            <a href="#">Clubs</a>
+            <a href="#">Profile</a>
+        </nav>
+        <button class="login-btn">Login</button>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section class="hero">
+        <h1>Welcome to <span>Y</span></h1>
+        <p>The official social space for our school community.</p>
+        <button class="cta">Join Now</button>
+    </section>
+
+    <!-- FEED SECTION -->
+    <section class="feed">
+        <h2>Recent Posts</h2>
+
+        <div class="post">
+            <h3>Science Club</h3>
+            <p>Don’t forget about our meeting this Thursday after school!</p>
+        </div>
+
+        <div class="post">
+            <h3>Sports Department</h3>
+            <p>Track tryouts start next week. Bring your running shoes!</p>
+        </div>
+
+        <div class="post">
+            <h3>Art Class</h3>
+            <p>Art show submissions are now open.</p>
+        </div>
+    </section>
+
+</body>
+</html>
