@@ -60,30 +60,29 @@
         </div>
     </section>
 
-     <!-- 🔥 FIREBASE INTEGRATION -->
+    <!-- 🔥 FIREBASE (FIXED) -->
     <script type="module">
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
-      import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-analytics.js";
+        // Firebase imports (no analytics – avoids HTTPS errors)
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+        import { getFirestore } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
 
-      const firebaseConfig = {
-        apiKey: "AIzaSyBui0laG_D2zwqlBLoAw2zSUgrqS-4lA_M",
-        authDomain: "cmms-y.firebaseapp.com",
-        projectId: "cmms-y",
-        storageBucket: "cmms-y.firebasestorage.app",
-        messagingSenderId: "461705384988",
-        appId: "1:461705384988:web:92d66768fff4548186bbd9",
-        measurementId: "G-3MGBW2YBF5"
-      };
+        const firebaseConfig = {
+            apiKey: "AIzaSyBui0laG_D2zwqlBLoAw2zSUgrqS-4lA_M",
+            authDomain: "cmms-y.firebaseapp.com",
+            projectId: "cmms-y",
+            storageBucket: "cmms-y.appspot.com",     // FIXED
+            messagingSenderId: "461705384988",
+            appId: "1:461705384988:web:92d66768fff4548186bbd9"
+        };
 
-      const app = initializeApp(firebaseConfig);
-      const analytics = getAnalytics(app);
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
     </script>
 
     <!-- THEME SWITCH SCRIPT -->
     <script>
         const themeBtn = document.getElementById("themeToggle");
 
-        // Load saved theme
         if (localStorage.getItem("theme") === "dark") {
             document.body.classList.add("dark-theme");
             themeBtn.textContent = "Light Mode";
@@ -93,20 +92,21 @@
             document.body.classList.toggle("dark-theme");
 
             const isDark = document.body.classList.contains("dark-theme");
-
             themeBtn.textContent = isDark ? "Light Mode" : "Dark Mode";
-
-            // Save choice
             localStorage.setItem("theme", isDark ? "dark" : "light");
         };
     </script>
 
-    <!-- Add & Submit buttons -->
+    <!-- ADD POST + SUBMIT FIXED -->
     <script>
         const $ = document.getElementById.bind(document);
 
         $('add_post').onclick = () => $('add_post_form').style.display = 'block';
-        $('submit').onclick = () => alert("\"submitted\" hmm");
+
+        // FIXED: id was wrong → now uses "submitPost"
+        $('submitPost').onclick = () => {
+            alert("submitted!");
+        };
     </script>
 
 </body>
