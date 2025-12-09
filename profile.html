@@ -132,7 +132,17 @@
             <a href="posts.html">Posts</a>
             <a href="#">Clubs</a>
             <a href="profile.html">Profile</a>
+            <a href="settings.html">Settings</a>
         </nav>
+
+        <div style="flex: 1; max-width: 300px; margin: 0 20px;">
+            <div style="position: relative;">
+                <input type="text" id="searchBar" placeholder="Search users, posts..." 
+                    style="width: 100%; padding: 10px 15px; border: none; border-radius: 20px; background: rgba(255,255,255,0.2); color: var(--header-text); font-size: 14px;"
+                    onfocus="showSearchResults()" onkeyup="performSearch(event)" />
+                <div id="searchResults" style="position: absolute; top: 100%; left: 0; right: 0; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 8px; margin-top: 5px; display: none; max-height: 300px; overflow-y: auto; z-index: 1000; box-shadow: var(--shadow);"></div>
+            </div>
+        </div>
 
         <div>
             <button class="login-btn" id="navLoginBtn">Login</button>
@@ -209,8 +219,24 @@
     <script>
         const themeBtn = document.getElementById("themeToggle");
 
-        // Load saved theme
-        if (localStorage.getItem("theme") === "dark") {
+        // Function to apply theme
+        function applyTheme(themeName) {
+            // Remove all theme classes
+            document.body.classList.remove("theme-twitter", "theme-catppuccin", "theme-retro", "theme-classic");
+            
+            // Apply new theme
+            if (themeName && themeName !== "twitter") {
+                document.body.classList.add(`theme-${themeName}`);
+            }
+        }
+
+        // Load saved theme and dark mode preference
+        const savedTheme = localStorage.getItem("theme-style") || "twitter";
+        const isDarkMode = localStorage.getItem("theme") === "dark";
+        
+        applyTheme(savedTheme);
+        
+        if (isDarkMode) {
             document.body.classList.add("dark-theme");
             themeBtn.textContent = "Light Mode";
         }
@@ -225,6 +251,39 @@
             // Save choice
             localStorage.setItem("theme", isDark ? "dark" : "light");
         };
+    </script>
+
+    <!-- SEARCH SCRIPT -->
+    <script>
+        // Search functionality
+        window.performSearch = function(event) {
+            const query = event.target.value.trim();
+            const searchResults = document.getElementById('searchResults');
+
+            if (!query) {
+                searchResults.style.display = 'none';
+                return;
+            }
+
+            // Placeholder for search - requires auth context
+            searchResults.innerHTML = '<div style="padding: 15px; text-align: center; color: var(--text-light);">Search disabled on profile page</div>';
+            searchResults.style.display = 'block';
+        };
+
+        window.showSearchResults = function() {
+            const searchBar = document.getElementById('searchBar');
+            if (searchBar.value.trim()) {
+                document.getElementById('searchResults').style.display = 'block';
+            }
+        };
+
+        // Close search when clicking outside
+        document.addEventListener('click', function(e) {
+            if (e.target.id !== 'searchBar') {
+                const results = document.getElementById('searchResults');
+                if (results) results.style.display = 'none';
+            }
+        });
     </script>
 
 </body>

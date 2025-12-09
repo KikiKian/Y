@@ -213,6 +213,15 @@
             <a href="settings.html" style="color: var(--accent); font-weight: 700;">Settings</a>
         </nav>
 
+        <div style="flex: 1; max-width: 300px; margin: 0 20px;">
+            <div style="position: relative;">
+                <input type="text" id="searchBar" placeholder="Search users, posts..." 
+                    style="width: 100%; padding: 10px 15px; border: none; border-radius: 20px; background: rgba(255,255,255,0.2); color: var(--header-text); font-size: 14px;"
+                    onfocus="showSearchResults()" onkeyup="performSearch(event)" />
+                <div id="searchResults" style="position: absolute; top: 100%; left: 0; right: 0; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 8px; margin-top: 5px; display: none; max-height: 300px; overflow-y: auto; z-index: 1000; box-shadow: var(--shadow);"></div>
+            </div>
+        </div>
+
         <div>
             <button class="login-btn" id="navLoginBtn">Login</button>
             <button class="theme-btn" id="themeToggle">Dark Mode</button>
