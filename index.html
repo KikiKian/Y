@@ -14,14 +14,15 @@
         <div class="logo">Y</div>
 
         <nav>
-            <a href="#">Home</a>
-            <a href="#">Posts</a>
+            <a href="index.html">Home</a>
+            <a href="posts.html">Posts</a>
             <a href="#">Clubs</a>
-            <a href="#">Profile</a>
+            <a href="profile.html">Profile</a>
+            <a href="settings.html">Settings</a>
         </nav>
 
         <div>
-            <button class="login-btn">Login</button>
+            <button class="login-btn" id="navLoginBtn">Login</button>
             <button class="theme-btn" id="themeToggle">Dark Mode</button>
         </div>
     </header>
@@ -30,7 +31,7 @@
     <section class="hero">
         <h1>Welcome to <span>Y</span></h1>
         <p>The official social space for our school community.</p>
-        <button class="cta" id="add_post">Add post</button>
+        <a href="posts.html" class="cta">Add post</a>
 
         <div style="display: none" id="add_post_form">
             <h2>Create a Post</h2>
@@ -43,41 +44,224 @@
     <!-- FEED SECTION -->
     <section class="feed">
         <h2>Recent Posts</h2>
-
-        <div class="post">
-            <h3>Science Club</h3>
-            <p>Don’t forget about our meeting this Thursday after school!</p>
-        </div>
-
-        <div class="post">
-            <h3>Sports Department</h3>
-            <p>Track tryouts start next week. Bring your running shoes!</p>
-        </div>
-
-        <div class="post">
-            <h3>Art Class</h3>
-            <p>Art show submissions are now open.</p>
-        </div>
     </section>
 
-     <!-- 🔥 FIREBASE INTEGRATION -->
-    <script type="module">
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
-      import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-analytics.js";
+         <!-- 🔥 FIREBASE INTEGRATION -->
+        <script type="module">
+            // Import the functions you need from the SDKs you need
+            import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+            import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-analytics.js";
+            import { getFirestore, collection, getDocs, query, orderBy, limit, addDoc } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+            import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
 
-      const firebaseConfig = {
-        apiKey: "AIzaSyBui0laG_D2zwqlBLoAw2zSUgrqS-4lA_M",
-        authDomain: "cmms-y.firebaseapp.com",
-        projectId: "cmms-y",
-        storageBucket: "cmms-y.firebasestorage.app",
-        messagingSenderId: "461705384988",
-        appId: "1:461705384988:web:92d66768fff4548186bbd9",
-        measurementId: "G-3MGBW2YBF5"
-      };
+            // Your web app's Firebase configuration
+            // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+            const firebaseConfig = {
+                apiKey: "AIzaSyAZkklblmr2WM6KJ2wI58GZA-KbekFf9Q8",
+                authDomain: "cmms-y-404fe.firebaseapp.com",
+                projectId: "cmms-y-404fe",
+                storageBucket: "cmms-y-404fe.firebasestorage.app",
+                messagingSenderId: "763819042330",
+                appId: "1:763819042330:web:e6ab7d7e9146e430bad3a3",
+                measurementId: "G-8QV4820GSH"
+            };
 
-      const app = initializeApp(firebaseConfig);
-      const analytics = getAnalytics(app);
-    </script>
+            // Initialize Firebase
+            const app = initializeApp(firebaseConfig);
+            const analytics = getAnalytics(app);
+            const db = getFirestore(app);
+            const auth = getAuth(app);
+
+            // Check auth state and update login button
+            onAuthStateChanged(auth, (user) => {
+                const navLoginBtn = document.getElementById("navLoginBtn");
+                if (user) {
+                    navLoginBtn.textContent = "Logout";
+                    navLoginBtn.onclick = async () => {
+                        try {
+                            await signOut(auth);
+                            window.location.href = "index.html";
+                        } catch (error) {
+                            console.error("Error logging out:", error);
+                        }
+                    };
+                } else {
+                    navLoginBtn.textContent = "Login";
+                    navLoginBtn.onclick = () => {
+                        window.location.href = "login.html";
+                    };
+                }
+            });
+
+            // Function to load recent posts from Firestore
+            async function loadRecentPosts() {
+                try {
+                    const postsCollection = collection(db, "posts");
+                    const q = query(postsCollection, orderBy("timestamp", "desc"), limit(10));
+                    const querySnapshot = await getDocs(q);
+                    
+                    const feedSection = document.querySelector(".feed");
+                    const existingPosts = feedSection.querySelectorAll(".post");
+                    existingPosts.forEach(post => post.remove());
+
+                    querySnapshot.forEach((doc) => {
+                        const postData = doc.data();
+                        const postDiv = document.createElement("div");
+                        postDiv.className = "post";
+                        const authorHandle = postData.author?.split('@')[0] || 'Anonymous';
+                        const avatarInitial = authorHandle.charAt(0).toUpperCase();
+                        postDiv.innerHTML = `
+                            <div class="post-header">
+                                <div class="post-author-info">
+                                    <div style="position: relative; display: inline-block;">
+                                        <p class="post-author-name" style="cursor: pointer;" onclick="toggleProfileCard(event, '${postData.author}', '${authorHandle}')">${authorHandle}</p>
+                                        <p class="post-author-handle">@${postData.author || 'user'}</p>
+                                        <div id="profile-card-${doc.id}" class="profile-card" style="display: none; position: absolute; left: 0; top: 100%; z-index: 1000; width: 220px; margin-top: -8px;">
+                                            <div class="profile-card-avatar">${avatarInitial}</div>
+                                            <div class="profile-card-info">
+                                                <p class="profile-card-name">${authorHandle}</p>
+                                                <p class="profile-card-handle">@${postData.author}</p>
+                                            </div>
+                                            <button class="profile-card-follow" onclick="toggleFollow('${postData.author}', this)">Follow</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="post-timestamp">${new Date(postData.timestamp).toLocaleDateString()}</p>
+                            </div>
+                            <h3>${postData.title}</h3>
+                            <p>${postData.content}</p>
+                            <div class="post-meta">${new Date(postData.timestamp).toLocaleTimeString()}</div>
+                            <div class="post-actions">
+                                <button class="reply-toggle-btn" onclick="toggleReplies('${doc.id}')">💬 Reply</button>
+                            </div>
+                            <div id="replies-${doc.id}" class="replies-section" style="display: none; margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--card-border);">
+                                <div id="replies-list-${doc.id}" class="replies-list"></div>
+                                <div class="reply-form" style="margin-top: 15px;">
+                                    <input type="text" class="reply-input" id="reply-input-${doc.id}" placeholder="Write a reply..." />
+                                    <button class="reply-submit-btn" onclick="submitReply('${doc.id}')">Reply</button>
+                                </div>
+                            </div>
+                        `;
+                        feedSection.appendChild(postDiv);
+                    });
+                } catch (error) {
+                    console.error("Error loading posts:", error);
+                }
+            }
+
+            // Load posts on page load
+            loadRecentPosts();
+
+            // Global functions for replies
+            window.toggleReplies = async function(postId) {
+                const repliesSection = document.getElementById(`replies-${postId}`);
+                if (repliesSection.style.display === "none") {
+                    repliesSection.style.display = "block";
+                    await loadReplies(postId);
+                } else {
+                    repliesSection.style.display = "none";
+                }
+            };
+
+            async function loadReplies(postId) {
+                try {
+                    const repliesList = document.getElementById(`replies-list-${postId}`);
+                    repliesList.innerHTML = "<p style='color: var(--text-light); font-size: 14px;'>Loading replies...</p>";
+                    
+                    const repliesCollection = collection(db, `posts/${postId}/replies`);
+                    const q = query(repliesCollection, orderBy("timestamp", "asc"));
+                    const querySnapshot = await getDocs(q);
+                    
+                    repliesList.innerHTML = "";
+                    
+                    if (querySnapshot.empty) {
+                        repliesList.innerHTML = "<p style='color: var(--text-light); font-size: 14px;'>No replies yet. Be the first to reply!</p>";
+                        return;
+                    }
+
+                    querySnapshot.forEach((doc) => {
+                        const replyData = doc.data();
+                        const replyDiv = document.createElement("div");
+                        replyDiv.className = "reply";
+                        replyDiv.innerHTML = `
+                            <p style="margin: 0 0 5px 0; font-weight: 600; color: var(--accent); font-size: 13px;">${replyData.author}</p>
+                            <p style="margin: 0 0 8px 0; color: var(--text); font-size: 14px;">${replyData.content}</p>
+                            <small style="color: var(--text-light);">${new Date(replyData.timestamp).toLocaleString()}</small>
+                        `;
+                        repliesList.appendChild(replyDiv);
+                    });
+                } catch (error) {
+                    console.error("Error loading replies:", error);
+                    document.getElementById(`replies-list-${postId}`).innerHTML = "<p style='color: red;'>Error loading replies</p>";
+                }
+            }
+
+            window.submitReply = async function(postId) {
+                const replyInput = document.getElementById(`reply-input-${postId}`);
+                const replyContent = replyInput.value.trim();
+
+                if (!replyContent) {
+                    alert("Please write a reply");
+                    return;
+                }
+
+                if (!auth.currentUser) {
+                    alert("You must be logged in to reply");
+                    window.location.href = "login.html";
+                    return;
+                }
+
+                try {
+                    await addDoc(collection(db, `posts/${postId}/replies`), {
+                        author: auth.currentUser.email,
+                        content: replyContent,
+                        timestamp: new Date().getTime()
+                    });
+                    replyInput.value = "";
+                    await loadReplies(postId);
+                } catch (error) {
+                    console.error("Error submitting reply:", error);
+                    alert(`Failed to submit reply: ${error.message}`);
+                }
+            };
+
+            // Profile card functions
+            window.toggleProfileCard = function(event, email, name) {
+                event.stopPropagation();
+                const postId = event.target.closest('.post').querySelector('[id^="profile-card-"]').id.replace('profile-card-', '');
+                const profileCard = document.getElementById('profile-card-' + postId);
+                
+                // Close other profile cards
+                document.querySelectorAll('.profile-card').forEach(card => {
+                    if (card !== profileCard) card.style.display = 'none';
+                });
+                
+                profileCard.style.display = profileCard.style.display === 'none' ? 'block' : 'none';
+            };
+
+            window.toggleFollow = function(email, button) {
+                let following = JSON.parse(localStorage.getItem('following') || '[]');
+                
+                if (following.includes(email)) {
+                    following = following.filter(e => e !== email);
+                    button.textContent = 'Follow';
+                    button.classList.remove('following');
+                } else {
+                    following.push(email);
+                    button.textContent = 'Following';
+                    button.classList.add('following');
+                }
+                
+                localStorage.setItem('following', JSON.stringify(following));
+            };
+
+            // Close profile cards on click outside
+            document.addEventListener('click', function() {
+                document.querySelectorAll('.profile-card').forEach(card => {
+                    card.style.display = 'none';
+                });
+            });
+        </script>
 
     <!-- THEME SWITCH SCRIPT -->
     <script>

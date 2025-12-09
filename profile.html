@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - Y Social Media</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .profile-container {
+            max-width: 600px;
+            margin: 60px auto;
+            padding: 30px;
+            background: var(--card-bg, #fff);
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .profile-header h1 {
+            margin: 0 0 10px 0;
+        }
+
+        .profile-email {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .dark-theme .profile-email {
+            color: #aaa;
+        }
+
+        .profile-info {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .dark-theme .profile-info {
+            background: #333;
+        }
+
+        .profile-info p {
+            margin: 10px 0;
+            font-size: 14px;
+        }
+
+        .profile-info strong {
+            color: #333;
+        }
+
+        .dark-theme .profile-info strong {
+            color: #fff;
+        }
+
+        .profile-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        .profile-actions button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .logout-btn {
+            background: #d32f2f;
+            color: white;
+        }
+
+        .logout-btn:hover {
+            background: #b71c1c;
+        }
+
+        .home-btn {
+            background: #0066cc;
+            color: white;
+        }
+
+        .home-btn:hover {
+            background: #0052a3;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            font-size: 18px;
+        }
+
+        .not-logged-in {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .not-logged-in p {
+            margin-bottom: 20px;
+        }
+
+        .not-logged-in a {
+            display: inline-block;
+            background: #0066cc;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+
+        .not-logged-in a:hover {
+            background: #0052a3;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- HEADER / NAVBAR -->
+    <header>
+        <div class="logo">Y</div>
+
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="posts.html">Posts</a>
+            <a href="#">Clubs</a>
+            <a href="profile.html">Profile</a>
+        </nav>
+
+        <div>
+            <button class="login-btn" id="navLoginBtn">Login</button>
+            <button class="theme-btn" id="themeToggle">Dark Mode</button>
+        </div>
+    </header>
+
+    <!-- PROFILE CONTAINER -->
+    <div id="profileContent"></div>
+
+    <!-- 🔥 FIREBASE AUTHENTICATION -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAZkklblmr2WM6KJ2wI58GZA-KbekFf9Q8",
+            authDomain: "cmms-y-404fe.firebaseapp.com",
+            projectId: "cmms-y-404fe",
+            storageBucket: "cmms-y-404fe.firebasestorage.app",
+            messagingSenderId: "763819042330",
+            appId: "1:763819042330:web:e6ab7d7e9146e430bad3a3",
+            measurementId: "G-8QV4820GSH"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const profileContent = document.getElementById("profileContent");
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // User is logged in
+                profileContent.innerHTML = `
+                    <div class="profile-container">
+                        <div class="profile-header">
+                            <h1>Welcome, ${user.email.split('@')[0]}!</h1>
+                            <p class="profile-email">${user.email}</p>
+                        </div>
+                        <div class="profile-info">
+                            <p><strong>Email:</strong> ${user.email}</p>
+                            <p><strong>User ID:</strong> ${user.uid}</p>
+                            <p><strong>Account Created:</strong> ${new Date(user.metadata.creationTime).toLocaleDateString()}</p>
+                            <p><strong>Last Sign In:</strong> ${new Date(user.metadata.lastSignInTime).toLocaleDateString()}</p>
+                        </div>
+                        <div class="profile-actions">
+                            <button class="home-btn" onclick="window.location.href='index.html'">Back to Home</button>
+                            <button class="logout-btn" id="logoutBtn">Logout</button>
+                        </div>
+                    </div>
+                `;
+
+                document.getElementById("logoutBtn").addEventListener("click", async () => {
+                    try {
+                        await signOut(auth);
+                        window.location.href = "login.html";
+                    } catch (error) {
+                        console.error("Error logging out:", error);
+                    }
+                });
+            } else {
+                // User is not logged in
+                profileContent.innerHTML = `
+                    <div class="not-logged-in">
+                        <h2>You are not logged in</h2>
+                        <p>Please log in to view your profile.</p>
+                        <a href="login.html">Go to Login</a>
+                    </div>
+                `;
+            }
+        });
+    </script>
+
+    <!-- THEME SWITCH SCRIPT -->
+    <script>
+        const themeBtn = document.getElementById("themeToggle");
+
+        // Load saved theme
+        if (localStorage.getItem("theme") === "dark") {
+            document.body.classList.add("dark-theme");
+            themeBtn.textContent = "Light Mode";
+        }
+
+        themeBtn.onclick = () => {
+            document.body.classList.toggle("dark-theme");
+
+            const isDark = document.body.classList.contains("dark-theme");
+
+            themeBtn.textContent = isDark ? "Light Mode" : "Dark Mode";
+
+            // Save choice
+            localStorage.setItem("theme", isDark ? "dark" : "light");
+        };
+    </script>
+
+</body>
+</html>

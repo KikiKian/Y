@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - Y Social Media</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .settings-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .settings-section {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .settings-section h3 {
+            margin: 0 0 20px 0;
+            color: var(--text);
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .setting-item {
+            margin-bottom: 20px;
+        }
+
+        .setting-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .setting-label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text);
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .setting-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 14px;
+            color: var(--text);
+            background: var(--card-bg);
+            transition: all 0.2s ease;
+            box-sizing: border-box;
+        }
+
+        .setting-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(30, 41, 235, 0.1);
+        }
+
+        .theme-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .theme-option {
+            padding: 12px;
+            border: 2px solid var(--card-border);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .theme-option:hover {
+            border-color: var(--accent);
+        }
+
+        .theme-option.active {
+            border-color: var(--accent);
+            background: rgba(30, 41, 235, 0.1);
+            color: var(--accent);
+        }
+
+        .dark-theme .theme-option.active {
+            background: rgba(227, 174, 12, 0.1);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: #1E29EB;
+        }
+
+        .btn-primary:hover {
+            background: #d4a60e;
+        }
+
+        .btn-secondary {
+            background: var(--card-border);
+            color: var(--text);
+        }
+
+        .btn-secondary:hover {
+            background: var(--header-bg);
+            color: white;
+        }
+
+        .btn-danger {
+            background: #d32f2f;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #b71c1c;
+        }
+
+        .success-message, .error-message {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .success-message {
+            background: rgba(56, 142, 60, 0.1);
+            color: #388e3c;
+            border: 1px solid #388e3c;
+        }
+
+        .error-message {
+            background: rgba(211, 47, 47, 0.1);
+            color: #d32f2f;
+            border: 1px solid #d32f2f;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .profile-preview {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: rgba(30, 41, 235, 0.05);
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #1E29EB;
+            font-size: 24px;
+        }
+
+        .profile-info h4 {
+            margin: 0;
+            color: var(--text);
+            font-weight: 700;
+        }
+
+        .profile-info p {
+            margin: 4px 0 0 0;
+            color: var(--text-light);
+            font-size: 13px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- HEADER / NAVBAR -->
+    <header>
+        <div class="logo">Y</div>
+
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="posts.html">Posts</a>
+            <a href="#">Clubs</a>
+            <a href="profile.html">Profile</a>
+            <a href="settings.html" style="color: var(--accent); font-weight: 700;">Settings</a>
+        </nav>
+
+        <div>
+            <button class="login-btn" id="navLoginBtn">Login</button>
+            <button class="theme-btn" id="themeToggle">Dark Mode</button>
+        </div>
+    </header>
+
+    <!-- SETTINGS CONTAINER -->
+    <div class="settings-container">
+        <h2 style="margin-top: 30px; margin-bottom: 20px;">Settings</h2>
+
+        <div id="successMessage" class="success-message hidden"></div>
+        <div id="errorMessage" class="error-message hidden"></div>
+
+        <!-- PROFILE SECTION -->
+        <div class="settings-section">
+            <h3>Profile</h3>
+            
+            <div class="profile-preview">
+                <div class="avatar" id="avatarPreview">Y</div>
+                <div class="profile-info">
+                    <h4 id="usernamePreview">Loading...</h4>
+                    <p id="emailPreview">user@example.com</p>
+                </div>
+            </div>
+
+            <div class="setting-item">
+                <label class="setting-label">Display Name</label>
+                <input type="text" id="displayName" class="setting-input" placeholder="Enter your display name" />
+            </div>
+
+            <button class="btn btn-primary" onclick="saveUsername()">Save Display Name</button>
+        </div>
+
+        <!-- THEME SECTION -->
+        <div class="settings-section">
+            <h3>Theme</h3>
+            <p style="margin: 0 0 15px 0; color: var(--text-light); font-size: 14px;">Choose your preferred theme</p>
+            
+            <div class="theme-grid">
+                <div class="theme-option" onclick="switchTheme('twitter')">
+                    🐦 Twitter
+                </div>
+                <div class="theme-option" onclick="switchTheme('catppuccin')">
+                    🎨 Catppuccin
+                </div>
+                <div class="theme-option" onclick="switchTheme('retro')">
+                    🎮 Retro
+                </div>
+                <div class="theme-option" onclick="switchTheme('classic')">
+                    ✨ Classic
+                </div>
+            </div>
+        </div>
+
+        <!-- ACCOUNT SECTION -->
+        <div class="settings-section">
+            <h3>Account</h3>
+            
+            <div class="button-group">
+                <button class="btn btn-secondary" onclick="window.location.href='profile.html'">Back to Profile</button>
+                <button class="btn btn-danger" onclick="logout()">Logout</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FIREBASE INTEGRATION -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAZkklblmr2WM6KJ2wI58GZA-KbekFf9Q8",
+            authDomain: "cmms-y-404fe.firebaseapp.com",
+            projectId: "cmms-y-404fe",
+            storageBucket: "cmms-y-404fe.firebasestorage.app",
+            messagingSenderId: "763819042330",
+            appId: "1:763819042330:web:e6ab7d7e9146e430bad3a3",
+            measurementId: "G-8QV4820GSH"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let currentUser = null;
+
+        // Check auth state
+        onAuthStateChanged(auth, async (user) => {
+            const navLoginBtn = document.getElementById("navLoginBtn");
+            if (user) {
+                currentUser = user;
+                navLoginBtn.textContent = "Logout";
+                navLoginBtn.onclick = logout;
+                
+                // Load user profile
+                loadUserProfile(user.uid, user.email);
+            } else {
+                navLoginBtn.textContent = "Login";
+                navLoginBtn.onclick = () => window.location.href = "login.html";
+                window.location.href = "login.html";
+            }
+        });
+
+        async function loadUserProfile(userId, email) {
+            try {
+                const userDoc = await getDoc(doc(db, "users", userId));
+                if (userDoc.exists()) {
+                    const userData = userDoc.data();
+                    document.getElementById("displayName").value = userData.displayName || email.split('@')[0];
+                    document.getElementById("emailPreview").textContent = email;
+                    updateAvatarPreview(userData.displayName || email.split('@')[0]);
+                } else {
+                    // New user
+                    document.getElementById("displayName").value = email.split('@')[0];
+                    document.getElementById("emailPreview").textContent = email;
+                    updateAvatarPreview(email.split('@')[0]);
+                }
+            } catch (error) {
+                console.error("Error loading profile:", error);
+            }
+        }
+
+        function updateAvatarPreview(displayName) {
+            const avatar = displayName.charAt(0).toUpperCase();
+            document.getElementById("avatarPreview").textContent = avatar;
+            document.getElementById("usernamePreview").textContent = displayName;
+        }
+
+        window.saveUsername = async function() {
+            const displayName = document.getElementById("displayName").value.trim();
+            const successMsg = document.getElementById("successMessage");
+            const errorMsg = document.getElementById("errorMessage");
+
+            successMsg.classList.add("hidden");
+            errorMsg.classList.add("hidden");
+
+            if (!displayName) {
+                errorMsg.textContent = "Display name cannot be empty";
+                errorMsg.classList.remove("hidden");
+                return;
+            }
+
+            try {
+                await setDoc(doc(db, "users", currentUser.uid), {
+                    displayName: displayName,
+                    email: currentUser.email,
+                    updatedAt: new Date().getTime()
+                }, { merge: true });
+
+                updateAvatarPreview(displayName);
+                successMsg.textContent = "✓ Display name saved successfully!";
+                successMsg.classList.remove("hidden");
+            } catch (error) {
+                console.error("Error saving profile:", error);
+                errorMsg.textContent = "Failed to save display name";
+                errorMsg.classList.remove("hidden");
+            }
+        };
+
+        window.switchTheme = function(themeName) {
+            // Update active theme button
+            document.querySelectorAll(".theme-option").forEach(btn => {
+                btn.classList.remove("active");
+            });
+            event.target.classList.add("active");
+
+            // Apply theme
+            localStorage.setItem("theme-style", themeName);
+            applyTheme(themeName);
+        };
+
+        function applyTheme(themeName) {
+            // Remove all theme classes
+            document.body.classList.remove("theme-twitter", "theme-catppuccin", "theme-retro", "theme-classic", "dark-theme");
+            
+            // Apply new theme
+            if (themeName === "catppuccin") {
+                document.body.classList.add("theme-catppuccin");
+                if (localStorage.getItem("theme") === "dark") {
+                    document.body.classList.add("dark-theme");
+                }
+            } else if (themeName === "retro") {
+                document.body.classList.add("theme-retro");
+            } else if (themeName === "classic") {
+                document.body.classList.add("theme-classic");
+            } else {
+                // Twitter theme (default)
+                if (localStorage.getItem("theme") === "dark") {
+                    document.body.classList.add("dark-theme");
+                }
+            }
+
+            // Highlight active theme
+            document.querySelectorAll(".theme-option").forEach((opt, idx) => {
+                if ((idx === 0 && themeName === "twitter") ||
+                    (idx === 1 && themeName === "catppuccin") ||
+                    (idx === 2 && themeName === "retro") ||
+                    (idx === 3 && themeName === "classic")) {
+                    opt.classList.add("active");
+                }
+            });
+        }
+
+        window.logout = async function() {
+            try {
+                await signOut(auth);
+                window.location.href = "login.html";
+            } catch (error) {
+                console.error("Error logging out:", error);
+            }
+        };
+
+        // Load saved theme on page load
+        const savedTheme = localStorage.getItem("theme-style") || "twitter";
+        applyTheme(savedTheme);
+    </script>
+
+    <!-- THEME SWITCH SCRIPT -->
+    <script>
+        const themeBtn = document.getElementById("themeToggle");
+
+        if (localStorage.getItem("theme") === "dark") {
+            document.body.classList.add("dark-theme");
+            themeBtn.textContent = "Light Mode";
+        }
+
+        themeBtn.onclick = () => {
+            document.body.classList.toggle("dark-theme");
+            const isDark = document.body.classList.contains("dark-theme");
+            themeBtn.textContent = isDark ? "Light Mode" : "Dark Mode";
+            localStorage.setItem("theme", isDark ? "dark" : "light");
+        };
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Y Social Media</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .auth-container {
+            max-width: 400px;
+            margin: 60px auto;
+            padding: 30px;
+            background: var(--card-bg, #fff);
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .auth-container h2 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .auth-container input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+
+        .auth-container button {
+            width: 100%;
+            padding: 12px;
+            background: #0066cc;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+
+        .auth-container button:hover {
+            background: #0052a3;
+        }
+
+        .auth-toggle {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        .auth-toggle a {
+            color: #0066cc;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .auth-toggle a:hover {
+            text-decoration: underline;
+        }
+
+        .error-message {
+            color: #d32f2f;
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .success-message {
+            color: #388e3c;
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .dark-theme .auth-container {
+            background: #222;
+            border: 1px solid #444;
+        }
+
+        .dark-theme .auth-container input {
+            background: #333;
+            color: white;
+            border-color: #555;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- HEADER / NAVBAR -->
+    <header>
+        <div class="logo">Y</div>
+
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="posts.html">Posts</a>
+            <a href="#">Clubs</a>
+            <a href="profile.html">Profile</a>
+        </nav>
+
+        <div>
+            <button class="login-btn" id="navLoginBtn">Login</button>
+            <button class="theme-btn" id="themeToggle">Dark Mode</button>
+        </div>
+    </header>
+
+    <!-- AUTH CONTAINER -->
+    <div class="auth-container">
+        <div id="setupWarning" style="display: none; background: #fff3cd; border: 2px solid #ffc107; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+            <strong>⚠️ Setup Required:</strong><br>
+            1. Go to <a href="https://console.firebase.google.com/project/cmms-y-404fe/authentication" target="_blank" style="color: #0066cc;">Firebase Console</a><br>
+            2. Click <strong>Authentication</strong> → <strong>Get started</strong><br>
+            3. Enable <strong>Email/Password</strong><br>
+            4. Refresh this page
+        </div>
+        <div id="loginForm">
+            <h2>Login</h2>
+            <div id="loginError" class="error-message"></div>
+            <input type="email" id="loginEmail" placeholder="Email" />
+            <input type="password" id="loginPassword" placeholder="Password" />
+            <button id="loginBtn">Login</button>
+            <div class="auth-toggle">
+                Don't have an account? <a onclick="toggleForms()">Sign up</a>
+            </div>
+        </div>
+
+        <div id="signupForm" style="display: none;">
+            <h2>Sign Up</h2>
+            <div id="signupError" class="error-message"></div>
+            <input type="email" id="signupEmail" placeholder="Email" />
+            <input type="password" id="signupPassword" placeholder="Password" />
+            <input type="password" id="signupConfirmPassword" placeholder="Confirm Password" />
+            <button id="signupBtn">Sign Up</button>
+            <div class="auth-toggle">
+                Already have an account? <a onclick="toggleForms()">Login</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 🔥 FIREBASE AUTHENTICATION -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAZkklblmr2WM6KJ2wI58GZA-KbekFf9Q8",
+            authDomain: "cmms-y-404fe.firebaseapp.com",
+            projectId: "cmms-y-404fe",
+            storageBucket: "cmms-y-404fe.firebasestorage.app",
+            messagingSenderId: "763819042330",
+            appId: "1:763819042330:web:e6ab7d7e9146e430bad3a3",
+            measurementId: "G-8QV4820GSH"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // Check if auth is properly configured
+        if (!auth) {
+            console.error("Firebase Auth is not configured. Please enable Authentication in Firebase Console.");
+            document.getElementById("setupWarning").style.display = "block";
+            document.getElementById("loginForm").style.display = "none";
+            document.getElementById("signupForm").style.display = "none";
+        }
+
+        // Global function to toggle forms
+        window.toggleForms = function() {
+            const loginForm = document.getElementById("loginForm");
+            const signupForm = document.getElementById("signupForm");
+            loginForm.style.display = loginForm.style.display === "none" ? "block" : "none";
+            signupForm.style.display = signupForm.style.display === "none" ? "block" : "none";
+        };
+
+        // Login functionality
+        document.getElementById("loginBtn").addEventListener("click", async () => {
+            const email = document.getElementById("loginEmail").value.trim();
+            const password = document.getElementById("loginPassword").value;
+            const errorDiv = document.getElementById("loginError");
+            errorDiv.textContent = "";
+
+            if (!email || !password) {
+                errorDiv.textContent = "Please fill in all fields.";
+                return;
+            }
+
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                window.location.href = "profile.html";
+            } catch (error) {
+                console.error("Login error:", error);
+                if (error.code === "auth/configuration-not-found") {
+                    errorDiv.textContent = "⚠️ Authentication not configured. Enable it in Firebase Console > Authentication > Email/Password";
+                } else {
+                    errorDiv.textContent = error.message;
+                }
+            }
+        });
+
+        // Sign up functionality
+        document.getElementById("signupBtn").addEventListener("click", async () => {
+            const email = document.getElementById("signupEmail").value.trim();
+            const password = document.getElementById("signupPassword").value;
+            const confirmPassword = document.getElementById("signupConfirmPassword").value;
+            const errorDiv = document.getElementById("signupError");
+            errorDiv.textContent = "";
+
+            if (!email || !password || !confirmPassword) {
+                errorDiv.textContent = "Please fill in all fields.";
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                errorDiv.textContent = "Passwords do not match.";
+                return;
+            }
+
+            if (password.length < 6) {
+                errorDiv.textContent = "Password must be at least 6 characters long.";
+                return;
+            }
+
+            try {
+                await createUserWithEmailAndPassword(auth, email, password);
+                window.location.href = "profile.html";
+            } catch (error) {
+                console.error("Sign up error:", error);
+                if (error.code === "auth/configuration-not-found") {
+                    errorDiv.textContent = "⚠️ Authentication not configured. Enable it in Firebase Console > Authentication > Email/Password";
+                } else {
+                    errorDiv.textContent = error.message;
+                }
+            }
+        });
+    </script>
+
+    <!-- THEME SWITCH SCRIPT -->
+    <script>
+        const themeBtn = document.getElementById("themeToggle");
+
+        // Load saved theme
+        if (localStorage.getItem("theme") === "dark") {
+            document.body.classList.add("dark-theme");
+            themeBtn.textContent = "Light Mode";
+        }
+
+        themeBtn.onclick = () => {
+            document.body.classList.toggle("dark-theme");
+
+            const isDark = document.body.classList.contains("dark-theme");
+
+            themeBtn.textContent = isDark ? "Light Mode" : "Dark Mode";
+
+            // Save choice
+            localStorage.setItem("theme", isDark ? "dark" : "light");
+        };
+    </script>
+
+</body>
+</html>
