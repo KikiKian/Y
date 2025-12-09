@@ -28,28 +28,28 @@
             --shadow-lg: 0 20px 25px rgba(0, 0, 0, 0.4);
         }
 
-        /* Catppuccin Theme - Soft pastels */
+        /* Catppuccin Theme - Dark Catppuccin */
         .theme-catppuccin {
-            --bg: #EFF1F5;
-            --text: #4C4F69;
-            --text-light: #9CA0B0;
-            --header-bg: #8839EF;
-            --header-text: #EFF1F5;
-            --accent: #DD7878;
-            --card-bg: #F6F6F6;
-            --card-border: #BCC0CC;
-            --shadow: 0 4px 6px rgba(136, 57, 239, 0.1), 0 10px 13px rgba(136, 57, 239, 0.08);
-            --shadow-lg: 0 20px 25px rgba(136, 57, 239, 0.15);
+            --bg: #1E1E2E;
+            --text: #CDD6F4;
+            --text-light: #A6ADC8;
+            --header-bg: #89B4FA;
+            --header-text: #1E1E2E;
+            --accent: #F38BA8;
+            --card-bg: #313244;
+            --card-border: #45475A;
+            --shadow: 0 4px 6px rgba(137, 180, 250, 0.1), 0 10px 13px rgba(137, 180, 250, 0.08);
+            --shadow-lg: 0 20px 25px rgba(137, 180, 250, 0.15);
         }
 
         .theme-catppuccin.dark-theme {
             --bg: #1E1E2E;
             --text: #CDD6F4;
             --text-light: #A6ADC8;
-            --header-bg: #313244;
-            --header-text: #CDD6F4;
+            --header-bg: #89B4FA;
+            --header-text: #1E1E2E;
             --accent: #F38BA8;
-            --card-bg: #282C34;
+            --card-bg: #313244;
             --card-border: #45475A;
         }
 
@@ -78,54 +78,54 @@
             --card-border: #1DB954;
         }
 
-        /* Classic Theme - Original colors */
+        /* Classic Theme - Black, Blue, and Yellow */
         .theme-classic {
-            --bg: #FDFDFC;
-            --text: #000000;
-            --text-light: #666666;
+            --bg: #0F0F0F;
+            --text: #FFFFFF;
+            --text-light: #BBBBBB;
             --header-bg: #1E29EB;
-            --header-text: #FDFDFC;
-            --accent: #E3AE0C;
-            --card-bg: #FDFDFC;
+            --header-text: #FFFFFF;
+            --accent: #FFD700;
+            --card-bg: #1A1A1A;
             --card-border: #1E29EB;
             --shadow: 0 4px 6px rgba(30, 41, 235, 0.1), 0 10px 13px rgba(30, 41, 235, 0.08);
             --shadow-lg: 0 20px 25px rgba(30, 41, 235, 0.15);
         }
 
         .theme-classic.dark-theme {
-            --bg: #121212;
+            --bg: #0F0F0F;
             --text: #FFFFFF;
-            --text-light: #bbbbbb;
-            --header-bg: #1a1a1a;
-            --header-text: #ffffff;
-            --accent: #E3AE0C;
-            --card-bg: #1e1e1e;
-            --card-border: #333333;
+            --text-light: #BBBBBB;
+            --header-bg: #1E29EB;
+            --header-text: #FFFFFF;
+            --accent: #FFD700;
+            --card-bg: #1A1A1A;
+            --card-border: #1E29EB;
         }
 
-        /* Twitter Theme - Black and Blue */
+        /* Twitter Theme - Black and Blue only */
         .theme-twitter {
             --bg: #000000;
-            --text: #E7E9EA;
+            --text: #FFFFFF;
             --text-light: #71767B;
             --header-bg: #1DA1F2;
             --header-text: #000000;
             --accent: #1DA1F2;
-            --card-bg: #15181C;
-            --card-border: #38444D;
+            --card-bg: #0A0A0A;
+            --card-border: #2F2F2F;
             --shadow: 0 4px 6px rgba(29, 161, 242, 0.1), 0 10px 13px rgba(29, 161, 242, 0.08);
             --shadow-lg: 0 20px 25px rgba(29, 161, 242, 0.15);
         }
 
         .theme-twitter.dark-theme {
             --bg: #000000;
-            --text: #E7E9EA;
+            --text: #FFFFFF;
             --text-light: #71767B;
             --header-bg: #1DA1F2;
             --header-text: #000000;
             --accent: #1DA1F2;
-            --card-bg: #15181C;
-            --card-border: #38444D;
+            --card-bg: #0A0A0A;
+            --card-border: #2F2F2F;
         }
 
         /* ======================================================
